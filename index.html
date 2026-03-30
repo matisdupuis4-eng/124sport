@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>124Sport — La finance du sport</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --white:#ffffff;
+  --off:#f7f6f3;
+  --black:#111111;
+  --gray:#555;
+  --light:#e8e6e1;
+  --lighter:#f2f1ee;
+  --blue:#1a56db;
+  --blue-light:#e8f0fe;
+  --font-ser:'Playfair Display',serif;
+  --font-body:'Source Sans 3',sans-serif;
+  --radius:4px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--white);color:var(--black);font-family:var(--font-body);font-size:16px;line-height:1.6;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{display:block;width:100%;height:100%;object-fit:cover}
+button{cursor:pointer;font-family:var(--font-body);border:none;background:none}
+input,textarea,select{font-family:var(--font-body)}
+
+/* ── TICKER ── */
+.ticker{background:var(--black);color:var(--white);font-size:12px;font-weight:600;letter-spacing:.04em;overflow:hidden;white-space:nowrap;padding:7px 0}
+.ticker-track{display:inline-flex;gap:48px;animation:tick 32s linear infinite}
+.ticker-track span b{font-weight:300;margin-left:6px;color:#aaa}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── NAV ── */
+nav{background:var(--white);border-bottom:2px solid var(--black);position:sticky;top:0;z-index:200}
+.nav-top{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{font-family:var(--font-ser);font-size:30px;font-weight:900;letter-spacing:-.01em;color:var(--black)}
+.logo em{color:var(--blue);font-style:normal}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--gray);transition:color .15s;padding-bottom:3px;border-bottom:2px solid transparent}
+.nav-links a:hover,.nav-links a.active{color:var(--black);border-bottom-color:var(--blue)}
+.nav-right{display:flex;gap:10px;align-items:center}
+.btn-nl{background:var(--blue);color:var(--white);font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:9px 18px;border-radius:var(--radius);transition:opacity .15s}
+.btn-nl:hover{opacity:.85}
+
+/* ── DATE BAR ── */
+.date-bar{background:var(--off);border-bottom:1px solid var(--light);padding:8px 0;text-align:center;font-size:12px;color:var(--gray);letter-spacing:.04em}
+
+/* ── VIEWS ── */
+.view{display:none}.view.active{display:block}
+
+/* ── HERO ── */
+.hero{border-bottom:1px solid var(--light);padding:48px 0 40px}
+.hero-in{max-width:1200px;margin:0 auto;padding:0 24px}
+.hero-grid{display:grid;grid-template-columns:1.8fr 1fr;gap:48px;align-items:start}
+.hero-main{cursor:pointer}
+.hero-img{aspect-ratio:16/9;overflow:hidden;border-radius:var(--radius);background:var(--lighter);margin-bottom:20px}
+.hero-img img{transition:transform .5s ease}
+.hero-main:hover .hero-img img{transform:scale(1.03)}
+.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin-bottom:10px}
+.hero-title{font-family:var(--font-ser);font-size:clamp(24px,3vw,38px);line-height:1.18;margin-bottom:12px;font-weight:700}
+.hero-excerpt{color:var(--gray);font-size:15px;line-height:1.7;max-width:560px}
+.hero-meta{display:flex;align-items:center;gap:10px;margin-top:16px;font-size:12px;color:#888;font-weight:600;letter-spacing:.02em}
+.hero-meta .sep{color:var(--light)}
+.hero-meta .rt{color:var(--blue)}
+
+/* SIDEBAR */
+.hero-side{border-left:1px solid var(--light);padding-left:40px}
+.side-head{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#888;padding-bottom:12px;border-bottom:2px solid var(--black);margin-bottom:0}
+.side-item{padding:16px 0;border-bottom:1px solid var(--light);cursor:pointer;transition:opacity .15s}
+.side-item:hover{opacity:.65}
+.side-cat{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin-bottom:5px}
+.side-ttl{font-family:var(--font-ser);font-size:15px;line-height:1.3;color:var(--black);margin-bottom:3px}
+.side-date{font-size:11px;color:#888}
+
+/* ── METRICS ── */
+.metrics{background:var(--off);border-bottom:1px solid var(--light);padding:28px 24px}
+.metrics-in{max-width:1200px;margin:0 auto}
+.metrics-lbl{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#888;margin-bottom:16px}
+.metrics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--light);border-radius:var(--radius);overflow:hidden;background:var(--light)}
+.metric{background:var(--white);padding:18px 22px;border-right:1px solid var(--light)}
+.metric:last-child{border-right:none}
+.metric-lbl{font-size:10px;color:#888;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
+.metric-val{font-family:var(--font-ser);font-size:26px;font-weight:700;line-height:1;color:var(--black)}
+.metric-chg{font-size:11px;font-weight:700;margin-top:3px}
+.up{color:#16a34a}.dn{color:#dc2626}.neu{color:#888}
+.metric-ctx{font-size:11px;color:#aaa;margin-top:2px}
+
+/* ── SECTION HEADER ── */
+.sec-hd{display:flex;align-items:center;gap:14px;margin-bottom:24px}
+.sec-lbl{font-family:var(--font-ser);font-size:20px;font-weight:700;white-space:nowrap}
+.sec-line{flex:1;height:1px;background:var(--light)}
+.sec-more{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;cursor:pointer;transition:opacity .15s}
+.sec-more:hover{opacity:.7}
+
+/* ── ARTICLES ── */
+.articles-sec{padding:48px 0;border-bottom:1px solid var(--light)}
+.art-wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+.art-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+.art-card{cursor:pointer;border-bottom:1px solid var(--light);padding-bottom:24px}
+.art-card.wide{grid-column:span 2;border-bottom:none;padding-bottom:0}
+.art-img{overflow:hidden;border-radius:var(--radius);background:var(--lighter);margin-bottom:14px}
+.art-card:not(.wide) .art-img{aspect-ratio:3/2}
+.art-card.wide .art-img{aspect-ratio:16/8}
+.art-img img{transition:transform .4s ease}
+.art-card:hover .art-img img{transform:scale(1.04)}
+.art-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin-bottom:7px}
+.art-ttl{font-family:var(--font-ser);font-size:17px;line-height:1.3;margin-bottom:8px;color:var(--black);transition:color .15s;font-weight:700}
+.art-card.wide .art-ttl{font-size:22px}
+.art-card:hover .art-ttl{color:var(--blue)}
+.art-exc{font-size:13px;color:var(--gray);line-height:1.65;margin-bottom:10px}
+.art-meta{font-size:11px;color:#888;display:flex;align-items:center;gap:6px;font-weight:600}
+.art-meta .rt{color:var(--blue)}
+
+/* ── READER ── */
+.reader{padding:48px 0 80px;background:var(--white)}
+.reader-in{max-width:720px;margin:0 auto;padding:0 24px}
+.reader-back{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:#888;letter-spacing:.05em;text-transform:uppercase;margin-bottom:32px;cursor:pointer;transition:color .15s}
+.reader-back:hover{color:var(--blue)}
+.reader-title{font-family:var(--font-ser);font-size:clamp(26px,4vw,42px);line-height:1.15;margin-bottom:18px;font-weight:900}
+.reader-meta{display:flex;align-items:center;gap:12px;font-size:13px;color:#888;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--light)}
+.reader-av{width:34px;height:34px;border-radius:50%;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--blue);flex-shrink:0}
+.reader-hero{aspect-ratio:16/8;overflow:hidden;border-radius:var(--radius);background:var(--lighter);margin-bottom:32px}
+.reader-body{font-size:17px;line-height:1.8;color:#333}
+.reader-body h2{font-family:var(--font-ser);font-size:24px;color:var(--black);margin:36px 0 14px;font-weight:700}
+.reader-body h3{font-family:var(--font-ser);font-size:20px;color:var(--black);margin:28px 0 10px;font-weight:700}
+.reader-body p{margin-bottom:18px}
+.reader-body strong{color:var(--black);font-weight:700}
+.reader-body blockquote{border-left:3px solid var(--blue);padding:14px 20px;margin:24px 0;background:var(--blue-light);border-radius:0 var(--radius) var(--radius) 0}
+.reader-body blockquote p{margin-bottom:0;font-style:italic;color:#444}
+.reader-body ul,.reader-body ol{margin:14px 0 18px 22px;color:#444}
+.reader-body li{margin-bottom:7px}
+.kpi-box{background:var(--off);border:1px solid var(--light);border-radius:var(--radius);padding:22px 26px;margin:28px 0;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.kpi-lbl{font-size:10px;color:#888;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px}
+.kpi-val{font-family:var(--font-ser);font-size:28px;font-weight:700;line-height:1;color:var(--black)}
+.kpi-desc{font-size:12px;color:#888;margin-top:2px}
+
+/* ── FILTERS ── */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.pill{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:6px 14px;border-radius:20px;border:1px solid var(--light);color:#888;cursor:pointer;transition:all .15s;background:var(--white)}
+.pill:hover{border-color:#aaa;color:var(--black)}
+.pill.active{background:var(--blue);color:var(--white);border-color:var(--blue)}
+
+/* ── ADMIN ── */
+.admin{padding:40px 0 80px;background:var(--white)}
+.admin-in{max-width:1100px;margin:0 auto;padding:0 24px}
+.admin-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;padding-bottom:20px;border-bottom:2px solid var(--black)}
+.admin-title{font-family:var(--font-ser);font-size:28px;font-weight:900}
+.admin-grid{display:grid;grid-template-columns:1fr 1.6fr;gap:28px;align-items:start}
+.cms-form{background:var(--off);border:1px solid var(--light);border-radius:var(--radius);padding:24px}
+.cms-title{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#888;margin-bottom:18px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#888;margin-bottom:6px}
+.field input,.field textarea,.field select{width:100%;background:var(--white);border:1px solid var(--light);border-radius:var(--radius);color:var(--black);font-size:14px;padding:10px 13px;outline:none;transition:border-color .15s}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--blue)}
+.field textarea{resize:vertical;min-height:80px;line-height:1.6}
+.ai-section{background:var(--blue-light);border:1px solid #c7d7f9;border-radius:var(--radius);padding:16px;margin-bottom:16px}
+.ai-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin-bottom:10px}
+.ai-section textarea{width:100%;background:var(--white);border:1px solid #c7d7f9;border-radius:var(--radius);color:var(--black);font-size:13px;padding:10px 13px;outline:none;resize:vertical;min-height:65px;line-height:1.6}
+.ai-section textarea:focus{border-color:var(--blue)}
+.ai-section select{width:100%;background:var(--white);border:1px solid #c7d7f9;border-radius:var(--radius);color:var(--black);font-size:13px;padding:9px 13px;outline:none;margin-top:8px}
+.btn-ai{width:100%;margin-top:10px;background:var(--blue);color:var(--white);font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:11px;border-radius:var(--radius);transition:opacity .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-ai:hover{opacity:.85}
+.btn-ai:disabled{opacity:.4;cursor:not-allowed}
+.btn-pub{width:100%;background:var(--black);color:var(--white);font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:12px;border-radius:var(--radius);transition:opacity .15s;margin-top:8px}
+.btn-pub:hover{opacity:.8}
+.divider{text-align:center;font-size:11px;color:#aaa;margin:6px 0 14px;letter-spacing:.05em}
+.gen-preview{background:var(--white);border:1px solid var(--light);border-radius:var(--radius);padding:16px;margin-top:10px;font-size:13px;color:#555;line-height:1.7;max-height:220px;overflow-y:auto;white-space:pre-wrap;display:none}
+.cms-list{display:flex;flex-direction:column;gap:10px}
+.cms-item{background:var(--white);border:1px solid var(--light);border-radius:var(--radius);padding:14px 18px;display:flex;align-items:center;gap:14px;transition:border-color .2s}
+.cms-item:hover{border-color:#aaa}
+.cms-item-tag{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--blue);flex-shrink:0;width:90px}
+.cms-item-info{flex:1;min-width:0}
+.cms-item-ttl{font-size:14px;font-weight:600;color:var(--black);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cms-item-date{font-size:11px;color:#888;margin-top:2px}
+.cms-item-actions{display:flex;gap:7px;flex-shrink:0}
+.btn-sm{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:5px 11px;border-radius:var(--radius);transition:all .15s;cursor:pointer;border:1px solid var(--light);background:none}
+.btn-view{color:#555}.btn-view:hover{color:var(--black);border-color:#aaa}
+.btn-del{color:#dc2626;border-color:#fecaca}.btn-del:hover{background:#fef2f2}
+.empty-state{text-align:center;padding:40px;color:#aaa;font-size:14px}
+.loading-dots::after{content:'';animation:dots 1.2s steps(4,end) infinite}
+@keyframes dots{0%,20%{content:'.'}40%{content:'..'}60%{content:'...'}80%,100%{content:''}}
+
+/* ── NL ── */
+.nl-sec{background:var(--black);color:var(--white);padding:64px 24px;text-align:center}
+.nl-in{max-width:440px;margin:0 auto}
+.nl-ey{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--blue);margin-bottom:12px}
+.nl-ttl{font-family:var(--font-ser);font-size:clamp(32px,5vw,48px);font-weight:900;line-height:1.1;margin-bottom:12px}
+.nl-sub{color:#aaa;font-size:14px;margin-bottom:24px}
+.nl-form{display:flex;border:1px solid #333;border-radius:var(--radius);overflow:hidden}
+.nl-form input{flex:1;background:#1a1a1a;color:var(--white);font-size:14px;padding:13px 16px;border:none;outline:none}
+.nl-form input::placeholder{color:#555}
+.nl-form button{background:var(--blue);color:var(--white);font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:13px 18px;white-space:nowrap;transition:opacity .15s;border:none;cursor:pointer}
+.nl-form button:hover{opacity:.85}
+.nl-note{font-size:11px;color:#555;margin-top:10px}
+
+/* ── PASSWORD MODAL ── */
+#pw-modal{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);align-items:center;justify-content:center}
+.pw-box{background:var(--white);border:1px solid var(--light);border-radius:var(--radius);padding:36px;width:100%;max-width:340px;margin:0 20px;box-shadow:0 20px 60px rgba(0,0,0,.15)}
+.pw-title{font-family:var(--font-ser);font-size:22px;font-weight:900;margin-bottom:5px}
+.pw-sub{font-size:13px;color:#888;margin-bottom:22px}
+.pw-input{width:100%;border:1px solid var(--light);border-radius:var(--radius);color:var(--black);font-size:15px;padding:11px 14px;outline:none;margin-bottom:8px;font-family:var(--font-body);transition:border-color .15s}
+.pw-input:focus{border-color:var(--blue)}
+.pw-error{font-size:12px;color:#dc2626;margin-bottom:10px;display:none}
+.pw-btns{display:flex;gap:8px}
+.pw-cancel{flex:1;padding:10px;border:1px solid var(--light);border-radius:var(--radius);font-size:13px;font-weight:600;color:#888;background:none;cursor:pointer;font-family:var(--font-body);transition:all .15s}
+.pw-cancel:hover{color:var(--black);border-color:#aaa}
+.pw-enter{flex:1;padding:10px;background:var(--blue);color:var(--white);border:none;border-radius:var(--radius);font-size:13px;font-weight:700;letter-spacing:.03em;cursor:pointer;font-family:var(--font-body);transition:opacity .15s}
+.pw-enter:hover{opacity:.85}
+
+/* ── FOOTER ── */
+footer{background:var(--off);border-top:1px solid var(--light);padding:40px 0 24px}
+.foot-in{max-width:1200px;margin:0 auto;padding:0 24px}
+.foot-top{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:36px;margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid var(--light)}
+.foot-logo{font-family:var(--font-ser);font-size:22px;font-weight:900;margin-bottom:10px}
+.foot-logo em{color:var(--blue);font-style:normal}
+.foot-desc{font-size:13px;color:var(--gray);line-height:1.6;max-width:200px}
+.foot-col-ttl{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#888;margin-bottom:12px}
+.foot-links{list-style:none;display:flex;flex-direction:column;gap:9px}
+.foot-links a{font-size:13px;color:var(--gray);transition:color .15s}
+.foot-links a:hover{color:var(--black)}
+.foot-btm{display:flex;justify-content:space-between;font-size:11px;color:#aaa}
+.foot-legal{display:flex;gap:16px}
+.foot-legal a{color:#aaa;transition:color .15s}
+.foot-legal a:hover{color:var(--black)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--black);color:var(--white);font-size:13px;font-weight:600;padding:11px 18px;border-radius:var(--radius);z-index:9998;transform:translateY(60px);opacity:0;transition:all .3s;border-left:3px solid var(--blue)}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr}
+  .hero-side{display:none}
+  .art-grid{grid-template-columns:1fr 1fr}
+  .art-card.wide{grid-column:span 2}
+  .metrics-grid{grid-template-columns:repeat(2,1fr)}
+  .admin-grid{grid-template-columns:1fr}
+  .foot-top{grid-template-columns:1fr 1fr}
+  .kpi-box{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .nav-links{display:none}
+  .art-grid{grid-template-columns:1fr}
+  .art-card.wide{grid-column:span 1}
+  .foot-top{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD MODAL -->
+<div id="pw-modal">
+  <div class="pw-box">
+    <p class="pw-title">Espace rédaction</p>
+    <p class="pw-sub">Accès réservé à l'équipe 124Sport</p>
+    <input type="password" id="pw-input" class="pw-input" placeholder="Mot de passe" onkeydown="if(event.key==='Enter')checkPw()">
+    <p id="pw-error" class="pw-error">Mot de passe incorrect.</p>
+    <div class="pw-btns">
+      <button class="pw-cancel" onclick="closePwModal()">Annuler</button>
+      <button class="pw-enter" onclick="checkPw()">Entrer →</button>
+    </div>
+  </div>
+</div>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span>PSG valorisation <b>€3.2B ▲ +4.1%</b></span>
+    <span>Real Madrid revenus <b>€1.045B ▲ record</b></span>
+    <span>Premier League droits TV <b>£6.7B 2025–29</b></span>
+    <span>NBA Salary Cap <b>$136M cette saison</b></span>
+    <span>Man City FFP <b>€50M amende UEFA</b></span>
+    <span>F1 budget plafonné <b>$135M/équipe</b></span>
+    <span>Transfert hivernal record <b>€185M rumeur</b></span>
+    <span>PSG valorisation <b>€3.2B ▲ +4.1%</b></span>
+    <span>Real Madrid revenus <b>€1.045B ▲ record</b></span>
+    <span>Premier League droits TV <b>£6.7B 2025–29</b></span>
+    <span>NBA Salary Cap <b>$136M cette saison</b></span>
+    <span>Man City FFP <b>€50M amende UEFA</b></span>
+    <span>F1 budget plafonné <b>$135M/équipe</b></span>
+    <span>Transfert hivernal record <b>€185M rumeur</b></span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-top">
+    <a class="logo" href="#" onclick="showView('home')">124<em>Sport</em></a>
+    <ul class="nav-links">
+      <li><a href="#" onclick="showView('home')" class="active" id="nav-home">Accueil</a></li>
+      <li><a href="#" onclick="filterAndShow('Football')">Football</a></li>
+      <li><a href="#" onclick="filterAndShow('NBA')">NBA</a></li>
+      <li><a href="#" onclick="filterAndShow('Finance')">Finance</a></li>
+      <li><a href="#" onclick="filterAndShow('Formule 1')">F1</a></li>
+      <li><a href="#" onclick="showView('all')">Tous les articles</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="btn-nl" onclick="scrollNL()">Newsletter</button>
+    </div>
+  </div>
+</nav>
+
+<!-- DATE BAR -->
+<div class="date-bar" id="date-bar"></div>
+
+<!-- ═══ HOME ═══ -->
+<div class="view active" id="view-home">
+
+  <section class="hero">
+    <div class="hero-in">
+      <div class="hero-grid">
+        <div class="hero-main" id="hero-main">
+          <div class="hero-img"><img id="hero-img" src="https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=900&q=80" alt=""></div>
+          <span class="tag" id="hero-tag">Analyse</span>
+          <h1 class="hero-title" id="hero-title">Les clubs européens face à la révolution des droits TV : qui gagne vraiment ?</h1>
+          <p class="hero-excerpt" id="hero-excerpt">Alors que la Premier League vient de signer un accord record à 6,7 milliards de livres, les ligues continentales cherchent à combler un fossé financier qui ne cesse de se creuser.</p>
+          <div class="hero-meta">
+            <span id="hero-author">Rédaction 124Sport</span>
+            <span class="sep">·</span>
+            <span id="hero-date">28 mars 2026</span>
+            <span class="sep">·</span>
+            <span class="rt" id="hero-rt">8 min de lecture</span>
+          </div>
+        </div>
+        <div class="hero-side">
+          <p class="side-head">À la une cette semaine</p>
+          <div id="hero-sidebar"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="metrics">
+    <div class="metrics-in">
+      <p class="metrics-lbl">Chiffres clés de la semaine</p>
+      <div class="metrics-grid">
+        <div class="metric"><p class="metric-lbl">Valorisation PSG</p><p class="metric-val">€3.2B</p><p class="metric-chg up">▲ +4.1% / 3 mois</p><p class="metric-ctx">Forbes 2026</p></div>
+        <div class="metric"><p class="metric-lbl">Droits TV PL</p><p class="metric-val">£6.7B</p><p class="metric-chg up">▲ Record absolu</p><p class="metric-ctx">2025–2029</p></div>
+        <div class="metric"><p class="metric-lbl">NBA Salary Cap</p><p class="metric-val">$136M</p><p class="metric-chg up">▲ +6% vs N-1</p><p class="metric-ctx">Saison 2025-26</p></div>
+        <div class="metric"><p class="metric-lbl">Budget F1 plafond</p><p class="metric-val">$135M</p><p class="metric-chg neu">→ Stable</p><p class="metric-ctx">Par écurie / saison</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="articles-sec">
+    <div class="art-wrap">
+      <div class="sec-hd">
+        <span class="sec-lbl">Dernières analyses</span>
+        <div class="sec-line"></div>
+        <span class="sec-more" onclick="showView('all')">Voir tout →</span>
+      </div>
+      <div class="filters" id="home-filters">
+        <button class="pill active" onclick="setFilter('Tous',this)">Tous</button>
+        <button class="pill" onclick="setFilter('Football',this)">Football</button>
+        <button class="pill" onclick="setFilter('NBA',this)">NBA</button>
+        <button class="pill" onclick="setFilter('Finance',this)">Finance</button>
+        <button class="pill" onclick="setFilter('Formule 1',this)">Formule 1</button>
+        <button class="pill" onclick="setFilter('Tennis',this)">Tennis</button>
+        <button class="pill" onclick="setFilter('Rugby',this)">Rugby</button>
+      </div>
+      <div class="art-grid" id="articles-grid"></div>
+    </div>
+  </section>
+
+  <section class="nl-sec" id="newsletter">
+    <div class="nl-in">
+      <p class="nl-ey">Newsletter hebdomadaire</p>
+      <h2 class="nl-ttl">Les chiffres qui comptent</h2>
+      <p class="nl-sub">Finance du sport, transferts, valorisations. Chaque lundi en 5 minutes.</p>
+      <form class="nl-form" onsubmit="subNL(event)">
+        <input type="email" placeholder="votre@email.com" required>
+        <button type="submit">S'abonner</button>
+      </form>
+      <p class="nl-note">Gratuit · Zéro spam · Désinscription en un clic</p>
+    </div>
+  </section>
+
+</div>
+
+<!-- ═══ ALL ARTICLES ═══ -->
+<div class="view" id="view-all">
+  <div class="art-wrap" style="padding-top:48px;padding-bottom:80px">
+    <div class="sec-hd">
+      <span class="sec-lbl">Tous les articles</span>
+      <div class="sec-line"></div>
+      <span class="sec-more" onclick="showView('home')">← Accueil</span>
+    </div>
+    <div class="filters" id="all-filters">
+      <button class="pill active" onclick="setFilterAll('Tous',this)">Tous</button>
+      <button class="pill" onclick="setFilterAll('Football',this)">Football</button>
+      <button class="pill" onclick="setFilterAll('NBA',this)">NBA</button>
+      <button class="pill" onclick="setFilterAll('Finance',this)">Finance</button>
+      <button class="pill" onclick="setFilterAll('Formule 1',this)">Formule 1</button>
+      <button class="pill" onclick="setFilterAll('Tennis',this)">Tennis</button>
+      <button class="pill" onclick="setFilterAll('Rugby',this)">Rugby</button>
+    </div>
+    <div class="art-grid" id="all-articles-grid"></div>
+  </div>
+</div>
+
+<!-- ═══ READER ═══ -->
+<div class="view" id="view-reader">
+  <div class="reader">
+    <div class="reader-in">
+      <div class="reader-back" onclick="goBack()">← Retour</div>
+      <span class="tag" id="r-tag"></span>
+      <h1 class="reader-title" id="r-title"></h1>
+      <div class="reader-meta">
+        <div class="reader-av" id="r-av"></div>
+        <div>
+          <div style="font-size:14px;font-weight:600;color:var(--black)" id="r-author"></div>
+          <div style="font-size:12px;color:#888" id="r-date"></div>
+        </div>
+        <span style="margin-left:auto;font-size:12px;color:var(--blue);font-weight:600" id="r-rt"></span>
+      </div>
+      <div class="reader-hero"><img id="r-img" src="" alt=""></div>
+      <div class="reader-body" id="r-body"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ADMIN ═══ -->
+<div class="view" id="view-admin">
+  <div class="admin">
+    <div class="admin-in">
+      <div class="admin-hd">
+        <div>
+          <h1 class="admin-title">Espace rédaction</h1>
+          <p style="font-size:13px;color:#888;margin-top:3px">Publiez et gérez vos articles 124Sport</p>
+        </div>
+        <button onclick="showView('home')" style="font-size:12px;font-weight:700;color:#888;letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--light);padding:8px 16px;border-radius:var(--radius);cursor:pointer;transition:all .15s" onmouseover="this.style.color='var(--black)'" onmouseout="this.style.color='#888'">← Voir le site</button>
+      </div>
+      <div class="admin-grid">
+        <div>
+          <div class="cms-form">
+            <p class="cms-title">⚡ Nouvel article</p>
+            <div class="ai-section">
+              <p class="ai-label">Générer avec l'IA</p>
+              <textarea id="ai-prompt" placeholder="Ex : L'impact économique du mercato estival sur les clubs de Ligue 1..."></textarea>
+              <select id="ai-cat">
+                <option>Football</option><option>NBA</option><option>Finance</option>
+                <option>Formule 1</option><option>Tennis</option><option>Rugby</option><option>Business</option>
+              </select>
+              <button class="btn-ai" id="ai-btn" onclick="generateArticle()">
+                <span id="ai-btn-txt">⚡ Générer l'article</span>
+              </button>
+              <div id="gen-preview" class="gen-preview"></div>
+            </div>
+            <p class="divider">— ou rédigez vous-même —</p>
+            <div class="field"><label>Titre</label><input type="text" id="f-title" placeholder="Titre de l'article"></div>
+            <div class="field"><label>Catégorie</label>
+              <select id="f-cat"><option>Football</option><option>NBA</option><option>Finance</option><option>Formule 1</option><option>Tennis</option><option>Rugby</option><option>Business</option></select>
+            </div>
+            <div class="field"><label>Résumé</label><textarea id="f-excerpt" placeholder="2-3 phrases d'accroche..."></textarea></div>
+            <div class="field"><label>Contenu</label><textarea id="f-body" placeholder="Rédigez votre article..." style="min-height:140px"></textarea></div>
+            <div class="field"><label>Auteur</label><input type="text" id="f-author" value="Rédaction 124Sport"></div>
+            <button class="btn-pub" onclick="publishArticle()">Publier →</button>
+          </div>
+        </div>
+        <div>
+          <div class="sec-hd" style="margin-bottom:14px">
+            <span class="sec-lbl">Articles publiés</span>
+            <div class="sec-line"></div>
+            <span style="font-size:12px;color:#888" id="art-count"></span>
+          </div>
+          <div class="cms-list" id="cms-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-in">
+    <div class="foot-top">
+      <div>
+        <div class="foot-logo">124<em>Sport</em></div>
+        <p class="foot-desc">Le média indépendant sur la finance du sport. Analyses, data et décryptages chaque semaine.</p>
+      </div>
+      <div>
+        <p class="foot-col-ttl">Rubriques</p>
+        <ul class="foot-links">
+          <li><a href="#" onclick="filterAndShow('Football')">Football</a></li>
+          <li><a href="#" onclick="filterAndShow('NBA')">NBA</a></li>
+          <li><a href="#" onclick="filterAndShow('Finance')">Finance</a></li>
+          <li><a href="#" onclick="filterAndShow('Formule 1')">Formule 1</a></li>
+          <li><a href="#" onclick="filterAndShow('Tennis')">Tennis</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="foot-col-ttl">Liens</p>
+        <ul class="foot-links">
+          <li><a href="#" onclick="showView('all')">Tous les articles</a></li>
+          <li><a href="#" onclick="scrollNL()">Newsletter</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="foot-col-ttl">À propos</p>
+        <ul class="foot-links">
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Mentions légales</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-btm">
+      <span>© 2026 124Sport. Tous droits réservés.</span>
+      <div class="foot-legal"><a href="#">Mentions légales</a><a href="#">Confidentialité</a></div>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── DATA ──
+const DEFAULT_ARTICLES = [
+  {id:1,title:"Les clubs européens face à la révolution des droits TV : qui gagne vraiment ?",tag:"Football",author:"Rédaction 124Sport",date:"28 mars 2026",readTime:"8 min",excerpt:"Alors que la Premier League vient de signer un accord record à 6,7 milliards de livres pour 2025-2029, les ligues continentales cherchent à combler un fossé qui ne cesse de se creuser.",body:`## Le nouveau visage des droits TV\n\nLa signature par la Premier League d'un contrat de diffusion à **6,7 milliards de livres** représente un tournant historique. Ce montant dépasse de 23% le contrat précédent.\n\n<kpi>\n{"label1":"Droits PL","val1":"£6.7B","desc1":"2025-2029","label2":"Ligue 1","val2":"€500M","desc2":"Par saison","label3":"Écart","val3":"x13","desc3":"PL vs L1"}\n</kpi>\n\n## L'écart qui creuse les inégalités\n\nPour la Ligue 1, la comparaison est brutale. Avec environ 500 millions d'euros par an, le championnat français représente moins d'un treizième du contrat anglais. Un club de milieu de tableau de Premier League touche autant en droits TV qu'un club européen de Ligue 1.\n\n> "Le football français doit repenser son modèle économique de fond en comble."\n\n## Les leviers de rattrapage\n\n- **Internationalisation des droits** : vendre le produit football à l'étranger\n- **Streaming** : Apple TV+, DAZN et Amazon Prime changent les règles\n- **Mutualisation européenne** : partager les revenus entre grands clubs\n\n## Ce que ça signifie pour les transferts\n\nL'écart de revenus se traduit directement dans les capacités de recrutement. Les clubs anglais aspirent les meilleurs talents avec des conditions financières inégalables.`,img:"https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=900&q=80",featured:true},
+  {id:2,title:"NBA : le salary cap explose et crée un basketball à deux vitesses",tag:"NBA",author:"Rédaction 124Sport",date:"26 mars 2026",readTime:"6 min",excerpt:"Avec un cap à 136M$ cette saison, les franchises repensent entièrement leurs stratégies. Les petits marchés sont les premiers perdants de cette inflation salariale.",body:`## L'explosion du salary cap NBA\n\nLe salary cap de la NBA pour la saison 2025-26 a été fixé à **136 millions de dollars**, soit une augmentation de 8%.\n\n<kpi>\n{"label1":"Salary Cap","val1":"$136M","desc1":"Saison 25-26","label2":"Luxury Tax","val2":"$165M","desc2":"Seuil déclencheur","label3":"Salaire max","val3":"$62M","desc3":"Joueur 10+ ans"}\n</kpi>\n\n## Les grandes franchises profitent\n\nNew York, Los Angeles et Boston absorbent la taxe de luxe sans sourciller. Pour Memphis ou Indiana, dépasser le seuil signifie des choix douloureux.\n\n> "Le cap est censé égaliser la compétition. En réalité, il favorise ceux qui peuvent payer la pénalité."\n\n## Les supermax comme distorsion\n\nLes contrats supermax permettent aux franchises de garder leurs stars à des montants inaccessibles pour la concurrence. Le marché des agents libres devient moins attrayant.`,img:"https://images.unsplash.com/photo-1546519638-68e109498ffc?w=600&q=80",featured:false},
+  {id:3,title:"F1 : le budget cap a-t-il vraiment nivelé la compétition ?",tag:"Formule 1",author:"Rédaction 124Sport",date:"24 mars 2026",readTime:"9 min",excerpt:"Deux ans après l'entrée en vigueur du plafond à 135M$, les inégalités persistent. Décryptage des contournements légaux des grandes écuries.",body:`## Le budget cap F1 : une révolution à moitié accomplie\n\nDepuis le plafond budgétaire à **135M$**, la Formule 1 voulait mettre fin à la domination des équipes les plus riches. Le bilan est nuancé.\n\n<kpi>\n{"label1":"Budget plafonné","val1":"$135M","desc1":"Par écurie 2024","label2":"Hors plafond","val2":"~$300M","desc2":"Marketing & salaires","label3":"Amendes max","val3":"$5M","desc3":"+ Pénalités sportives"}\n</kpi>\n\n## Ce qui est exclu du cap\n\nLes salaires des pilotes et des trois directeurs les mieux payés ne sont **pas comptabilisés**. Red Bull peut payer Verstappen 65M$ sans que ça affecte son budget course.\n\n## Les zones grises exploitées\n\n- **Filiales communes** : ressources partagées avec les constructeurs\n- **Valorisation des pièces** : méthodes comptables variables\n- **R&D délocalisée** : recherches financées hors cadre F1\n\n> "Quand Red Bull a été pénalisé pour dépassement budgétaire, l'amende était dérisoire par rapport à l'avantage compétitif gagné."`,img:"https://images.unsplash.com/photo-1611223235930-a4065e3b5e72?w=600&q=80",featured:false},
+  {id:4,title:"Les fonds souverains du Golfe ont changé le football pour toujours",tag:"Finance",author:"Rédaction 124Sport",date:"22 mars 2026",readTime:"11 min",excerpt:"De Newcastle à Manchester City, en passant par le PSG : la logique économique derrière les investissements du Moyen-Orient dans le sport européen.",body:`## Une stratégie de soft power calculée\n\nL'investissement des fonds souverains du Golfe n'est pas une lubie de milliardaires. C'est une **stratégie géopolitique et économique** parfaitement calculée.\n\n<kpi>\n{"label1":"PSG (QSI)","val1":"€3.2B","desc1":"Valorisation 2026","label2":"Man City (ADG)","val2":"€5.1B","desc2":"Forbes estimate","label3":"Newcastle (PIF)","val3":"€800M","desc3":"Investissement initial"}\n</kpi>\n\n## Le modèle PSG\n\nDepuis le rachat par Qatar Sports Investments en 2011, le PSG a dépensé plus de **1,5 milliard d'euros** en transferts nets. Le retour sur investissement s'évalue en termes de rayonnement diplomatique et d'attractivité économique.\n\n## Le modèle Manchester City\n\nLe groupe City Football Group possède désormais **12 clubs** sur 4 continents. Structure qui permet d'optimiser les transferts et de partager la data sportive.\n\n> "CFG n'est pas un club de football. C'est un fonds d'investissement sportif global déguisé en club."`,img:"https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600&q=80",featured:false},
+  {id:5,title:"Tennis : le prize money en Grand Chelem, l'illusion d'une démocratisation",tag:"Tennis",author:"Rédaction 124Sport",date:"20 mars 2026",readTime:"5 min",excerpt:"Wimbledon a annoncé une augmentation de 14%. Mais après impôts, agents et frais, combien reste-t-il vraiment aux joueurs du top 100 ?",body:`## Des annonces en trompe-l'œil\n\nChaque année, les Grand Chelems annoncent des records avec des communiqués triomphants. Wimbledon 2025 a distribué **£50 millions** au total. Mais derrière ces chiffres se cache une réalité bien moins flatteuse.\n\n<kpi>\n{"label1":"Prize Wimbledon","val1":"£50M","desc1":"Total distribué","label2":"Vainqueur","val2":"£2.7M","desc2":"Avant impôts","label3":"1er tour perdu","val3":"£60K","desc3":"Avant frais"}\n</kpi>\n\n## Le vrai calcul d'un joueur top 100\n\nUn joueur classé 80e mondial gagne en moyenne **300 000 à 500 000 euros bruts**. Déduisez :\n\n- 15-20% d'agent\n- Impôts selon le pays (jusqu'à 45%)\n- Coach et staff : 100-150K€/an\n- Voyages et équipement : 80-120K€/an\n\n**Résultat net : souvent moins de 100 000 euros.**\n\n## La concentration au sommet\n\nLes 10 premiers joueurs captent plus de 60% des prize money. La démocratisation annoncée est avant tout un argument marketing.`,img:"https://images.unsplash.com/photo-1521731978332-9e9e714bdd20?w=600&q=80",featured:false}
+];
+
+let articles = JSON.parse(localStorage.getItem('sc124_articles') || 'null') || [...DEFAULT_ARTICLES];
+let currentFilter = 'Tous', currentAllFilter = 'Tous', previousView = 'home';
+let adminUnlocked = false;
+const ADMIN_PW = 'Paulpogba10';
+
+function saveArticles(){ localStorage.setItem('sc124_articles', JSON.stringify(articles)); }
+
+// ── DATE BAR ──
+const d = new Date();
+document.getElementById('date-bar').textContent = d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).replace(/^\w/,c=>c.toUpperCase());
+
+// ── VIEWS ──
+function showView(v){
+  if(v==='admin' && !adminUnlocked){ openPwModal(); return; }
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');
+  if(v==='home') renderHome();
+  if(v==='all') renderAll();
+  if(v==='admin') renderAdmin();
+  window.scrollTo(0,0);
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
+  if(v==='home') document.getElementById('nav-home')?.classList.add('active');
+}
+function goBack(){ showView(previousView==='reader'?'home':previousView); }
+function filterAndShow(cat){
+  currentAllFilter=cat; showView('all');
+  document.querySelectorAll('#all-filters .pill').forEach(p=>p.classList.toggle('active',p.textContent===cat));
+  renderAll();
+}
+
+// ── HOME ──
+function renderHome(){ renderHero(); renderSidebar(); renderGrid('articles-grid',currentFilter,6); }
+function renderHero(){
+  const a = articles.find(x=>x.featured)||articles[0]; if(!a) return;
+  document.getElementById('hero-img').src=a.img;
+  document.getElementById('hero-tag').textContent=a.tag;
+  document.getElementById('hero-title').textContent=a.title;
+  document.getElementById('hero-excerpt').textContent=a.excerpt;
+  document.getElementById('hero-author').textContent=a.author;
+  document.getElementById('hero-date').textContent=a.date;
+  document.getElementById('hero-rt').textContent=a.readTime+' de lecture';
+  document.getElementById('hero-main').onclick=()=>openArticle(a.id,'home');
+}
+function renderSidebar(){
+  const el=document.getElementById('hero-sidebar');
+  const others=articles.filter(a=>!a.featured).slice(0,4);
+  el.innerHTML=others.map(a=>`<div class="side-item" onclick="openArticle(${a.id},'home')"><p class="side-cat">${a.tag}</p><p class="side-ttl">${a.title}</p><p class="side-date">${a.date}</p></div>`).join('');
+}
+function setFilter(cat,btn){
+  currentFilter=cat;
+  document.querySelectorAll('#home-filters .pill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  renderGrid('articles-grid',cat,6);
+}
+function setFilterAll(cat,btn){
+  currentAllFilter=cat;
+  document.querySelectorAll('#all-filters .pill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  renderAll();
+}
+function renderAll(){ renderGrid('all-articles-grid',currentAllFilter,50); }
+function renderGrid(id,filter,limit){
+  const el=document.getElementById(id); if(!el) return;
+  let list=filter==='Tous'?articles:articles.filter(a=>a.tag===filter);
+  list=list.slice(0,limit);
+  if(!list.length){el.innerHTML='<div class="empty-state">Aucun article dans cette catégorie.</div>';return;}
+  el.innerHTML=list.map((a,i)=>{
+    const wide=i===0&&filter==='Tous'&&id==='articles-grid';
+    return `<div class="art-card${wide?' wide':''}" onclick="openArticle(${a.id},'${id==='articles-grid'?'home':'all'}')">
+      <div class="art-img"><img src="${a.img}" alt="" loading="lazy"></div>
+      <span class="art-tag">${a.tag}</span>
+      <h2 class="art-ttl">${a.title}</h2>
+      <p class="art-exc">${a.excerpt}</p>
+      <div class="art-meta"><span>${a.author}</span><span>·</span><span>${a.date}</span><span>·</span><span class="rt">${a.readTime}</span></div>
+    </div>`;
+  }).join('');
+}
+
+// ── READER ──
+function openArticle(id,from){
+  const a=articles.find(x=>x.id===id); if(!a) return;
+  previousView=from||'home';
+  document.getElementById('r-tag').textContent=a.tag;
+  document.getElementById('r-title').textContent=a.title;
+  document.getElementById('r-av').textContent=a.author.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('r-author').textContent=a.author;
+  document.getElementById('r-date').textContent=a.date;
+  document.getElementById('r-rt').textContent='⏱ '+a.readTime;
+  document.getElementById('r-img').src=a.img;
+  document.getElementById('r-body').innerHTML=parseBody(a.body||a.excerpt);
+  showView('reader');
+}
+function parseBody(text){
+  if(!text) return '';
+  text=text.replace(/<kpi>([\s\S]*?)<\/kpi>/g,(_,json)=>{
+    try{const d=JSON.parse(json.trim());return `<div class="kpi-box"><div class="kpi-item"><div class="kpi-lbl">${d.label1}</div><div class="kpi-val">${d.val1}</div><div class="kpi-desc">${d.desc1}</div></div><div class="kpi-item"><div class="kpi-lbl">${d.label2}</div><div class="kpi-val">${d.val2}</div><div class="kpi-desc">${d.desc2}</div></div><div class="kpi-item"><div class="kpi-lbl">${d.label3}</div><div class="kpi-val">${d.val3}</div><div class="kpi-desc">${d.desc3}</div></div></div>`;}catch(e){return '';}
+  });
+  const lines=text.split('\n'); let html='';
+  for(const line of lines){
+    const t=line.trim(); if(!t) continue;
+    if(t.startsWith('## ')){html+=`<h2>${t.slice(3)}</h2>`;continue;}
+    if(t.startsWith('### ')){html+=`<h3>${t.slice(4)}</h3>`;continue;}
+    if(t.startsWith('> ')){html+=`<blockquote><p>${ri(t.slice(2))}</p></blockquote>`;continue;}
+    if(t.startsWith('- ')){html+=`<ul><li>${ri(t.slice(2))}</li></ul>`;continue;}
+    if(t.startsWith('<div')){html+=t;continue;}
+    html+=`<p>${ri(t)}</p>`;
+  }
+  return html.replace(/<\/ul>\s*<ul>/g,'');
+}
+function ri(t){return t.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>');}
+
+// ── ADMIN ──
+function renderAdmin(){
+  const list=document.getElementById('cms-list');
+  document.getElementById('art-count').textContent=`${articles.length} article${articles.length>1?'s':''}`;
+  if(!articles.length){list.innerHTML='<div class="empty-state">Aucun article. Publiez le premier !</div>';return;}
+  list.innerHTML=[...articles].reverse().map(a=>`
+    <div class="cms-item">
+      <span class="cms-item-tag">${a.tag}</span>
+      <div class="cms-item-info"><div class="cms-item-ttl">${a.title}</div><div class="cms-item-date">${a.date} · ${a.readTime}</div></div>
+      <div class="cms-item-actions">
+        <button class="btn-sm btn-view" onclick="openArticle(${a.id},'admin')">Lire</button>
+        <button class="btn-sm btn-del" onclick="deleteArticle(${a.id})">✕</button>
+      </div>
+    </div>`).join('');
+}
+function deleteArticle(id){
+  if(!confirm('Supprimer cet article ?')) return;
+  articles=articles.filter(a=>a.id!==id); saveArticles(); renderAdmin(); toast('Article supprimé');
+}
+function publishArticle(){
+  const title=document.getElementById('f-title').value.trim();
+  const cat=document.getElementById('f-cat').value;
+  const excerpt=document.getElementById('f-excerpt').value.trim();
+  const body=document.getElementById('f-body').value.trim();
+  const author=document.getElementById('f-author').value.trim()||'Rédaction 124Sport';
+  if(!title||!excerpt){toast('Titre et résumé requis !');return;}
+  const rt=Math.max(2,Math.round((body||excerpt).split(' ').length/200))+' min';
+  const date=new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
+  const imgs=['https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=900&q=80','https://images.unsplash.com/photo-1546519638-68e109498ffc?w=600&q=80','https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600&q=80','https://images.unsplash.com/photo-1611223235930-a4065e3b5e72?w=600&q=80','https://images.unsplash.com/photo-1521731978332-9e9e714bdd20?w=600&q=80'];
+  const img=imgs[Math.floor(Math.random()*imgs.length)];
+  articles.unshift({id:Date.now(),title,tag:cat,author,date,readTime:rt,excerpt,body:body||excerpt,img,featured:false});
+  saveArticles();
+  ['f-title','f-excerpt','f-body'].forEach(id=>document.getElementById(id).value='');
+  renderAdmin(); toast('✓ Article publié !');
+}
+
+// ── AI ──
+async function generateArticle(){
+  const prompt=document.getElementById('ai-prompt').value.trim();
+  const cat=document.getElementById('ai-cat').value;
+  if(!prompt){toast('Décrivez le sujet !');return;}
+  const btn=document.getElementById('ai-btn');
+  const btnTxt=document.getElementById('ai-btn-txt');
+  const preview=document.getElementById('gen-preview');
+  btn.disabled=true; btnTxt.innerHTML='<span class="loading-dots">Génération en cours</span>'; preview.style.display='none';
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      model:'claude-sonnet-4-20250514',max_tokens:1000,
+      system:`Tu es journaliste expert en finance du sport pour 124Sport. Réponds UNIQUEMENT avec un JSON valide (pas de backticks), avec ces champs exactement :
+{"title":"Titre accrocheur","excerpt":"2-3 phrases de résumé","body":"Corps en markdown (## pour H2, **gras**, > pour citations, - pour listes). 4-5 paragraphes avec chiffres concrets.","readTime":"X min"}`,
+      messages:[{role:'user',content:`Catégorie: ${cat}\nSujet: ${prompt}\n\nRédige un article complet pour 124Sport.`}]
+    })});
+    const data=await res.json();
+    const text=data.content?.find(c=>c.type==='text')?.text||'';
+    const parsed=JSON.parse(text.replace(/```json|```/g,''));
+    document.getElementById('f-title').value=parsed.title||'';
+    document.getElementById('f-cat').value=cat;
+    document.getElementById('f-excerpt').value=parsed.excerpt||'';
+    document.getElementById('f-body').value=parsed.body||'';
+    preview.style.display='block';
+    preview.textContent=`✓ Généré !\n\n${parsed.title}\n\n${parsed.excerpt}`;
+    toast('⚡ Article généré ! Vérifiez et publiez.');
+  }catch(e){
+    preview.style.display='block'; preview.textContent='⚠ Erreur. Réessayez.'; toast('Erreur de génération');
+  }
+  btn.disabled=false; btnTxt.innerHTML='⚡ Générer l\'article';
+}
+
+// ── PASSWORD ──
+function openPwModal(){document.getElementById('pw-modal').style.display='flex';setTimeout(()=>document.getElementById('pw-input').focus(),50);}
+function closePwModal(){document.getElementById('pw-modal').style.display='none';document.getElementById('pw-input').value='';document.getElementById('pw-error').style.display='none';}
+function checkPw(){
+  if(document.getElementById('pw-input').value===ADMIN_PW){adminUnlocked=true;closePwModal();showView('admin');}
+  else{document.getElementById('pw-error').style.display='block';document.getElementById('pw-input').value='';document.getElementById('pw-input').focus();}
+}
+// Secret key: type "admin"
+let kb='';
+document.addEventListener('keydown',e=>{kb+=e.key;if(kb.length>5)kb=kb.slice(-5);if(kb==='admin')openPwModal();});
+
+// ── UTILS ──
+function scrollNL(){showView('home');setTimeout(()=>document.getElementById('newsletter')?.scrollIntoView({behavior:'smooth'}),100);}
+function subNL(e){e.preventDefault();const btn=e.target.querySelector('button');btn.textContent='✓ Inscrit !';btn.style.background='#16a34a';setTimeout(()=>{btn.textContent="S'abonner";btn.style.background='var(--blue)';e.target.reset();},3000);}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
+
+renderHome();
+</script>
+</body>
+</html>
